@@ -2217,19 +2217,24 @@ if __name__ == '__main__':
                 f"📊 Data Dir: {IROTECH_DIR}\n🔑 Owner ID: {OWNER_ID}\n🛡️ Admins: {admin_ids}\n" + "="*40)
     
     # Run Flask server in a separate thread
-    threading.Thread(target=keep_alive).start()
+threading.Thread(target=keep_alive).start()
 
-    logger.info("🚀 Starting polling...")
-    while True:
-        try:
-            bot.infinity_polling(logger_level=logging.INFO, timeout=60, long_polling_timeout=30)
-        except requests.exceptions.ReadTimeout: logger.warning("Polling ReadTimeout. Restarting in 5s..."); time.sleep(5)
-        except requests.exceptions.ConnectionError as ce: logger.error(f"Polling ConnectionError: {ce}. Retrying in 15s..."); time.sleep(15)
-        except Exception as e:
-            logger.critical(f"💥 Unrecoverable polling error: {e}", exc_info=True)
-            logger.info("Restarting polling in 30s due to critical error..."); time.sleep(30)
-        
-        finally:
-    logger.warning("Polling attempt finished. Will restart if in loop.")
-    time.sleep(1)
-    app.run(host='0.0.0.0', port=os.environ.get("PORT", 8080))
+logger.info("⚡ Starting polling...")
+
+while True:
+    try:
+        bot.infinity_polling(logger_level=logging.INFO, timeout=60, long_polling_timeout=30)
+    except requests.exceptions.ReadTimeout:
+        logger.warning("Polling ReadTimeout. Restarting in 5s...")
+        time.sleep(5)
+    except requests.exceptions.ConnectionError as ce:
+        logger.error(f"Polling ConnectionError: {ce}. Retrying in 15s...")
+        time.sleep(15)
+    except Exception as e:
+        logger.critical(f"Unrecoverable polling error: {e}", exc_info=True)
+        logger.info("Restarting polling in 30s due to critical error...")
+        time.sleep(30)
+    finally:
+        logger.warning("Polling attempt finished. Will restart if in loop.")
+        time.sleep(1)
+        app.run(host='0.0.0.0', port=os.environ.get("PORT", 8080))
