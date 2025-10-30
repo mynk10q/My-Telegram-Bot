@@ -1,0 +1,4 @@
+pyTelegramBotAPI  # telebot ke liye
+Flask             # Keep-alive server ke liye
+requests          # Polling exceptions ke liye
+psutil            # System monitoring ke liye
